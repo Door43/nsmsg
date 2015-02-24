@@ -10,6 +10,10 @@ require_once(DOKU_PLUGIN.'admin.php');
  * All DokuWiki plugins to extend the admin function
  * need to inherit from this class
  *  
+ * 
+ * 2-24-15 Updated the way icons are included in message type display
+ * in _printmsgbar
+ * 
  */
 class admin_plugin_nsmsg extends DokuWiki_Admin_Plugin {
     
@@ -161,7 +165,7 @@ class admin_plugin_nsmsg extends DokuWiki_Admin_Plugin {
                     print $message->namespace."</textarea><br>";
                     print $this->getLang('type_label')."<br>";
                     $this->_printmsgbar($message->type, $idx);
-                    echo '<br>';
+                    echo '<br><br>';
                     
                     echo ("<input type='checkbox' name='del$idx'>".$this->getLang('btn_del')."<br><br>");
                     
@@ -191,31 +195,6 @@ class admin_plugin_nsmsg extends DokuWiki_Admin_Plugin {
         print "<br><br>";
         $this->_printmsgbar('-1', $idx);
         
-        
-        /*$imgpath = join(DIRECTORY_SEPARATOR, array(DOKU_BASE, 'lib', 'images','error.png'));
-        echo "<span style='background-color:#ffcccc;padding:0.2em;'>
-                <input type='radio' name='msg_type$idx' value='-1'>
-                <img src='$imgpath'>&nbsp;".
-                $this->getLang('error_msg')."&nbsp;
-                </span>";
-        $imgpath = join(DIRECTORY_SEPARATOR, array(DOKU_BASE, 'lib', 'images','info.png'));
-        echo "<span style='background-color:#ccccff;padding:0.2em;'>
-                <input type='radio' name='msg_type$idx' value='0'>
-                <img src='$imgpath'>&nbsp;".
-                $this->getLang('info_msg')."&nbsp;
-                </span>";
-        $imgpath = join(DIRECTORY_SEPARATOR, array(DOKU_BASE, 'lib', 'images','success.png'));
-        echo "<span style='background-color:#ccffcc;padding:0.2em;'>
-                <input type='radio' name='msg_type$idx' value='1'>
-                <img src='$imgpath'>&nbsp;".
-                $this->getLang('conf_msg')."&nbsp;
-                </span>";
-        $imgpath = join(DIRECTORY_SEPARATOR, array(DOKU_BASE, 'lib', 'images','notify.png'));
-        echo "<span style='background-color:#ffffcc;padding:0.2em;'>
-                <input type='radio' name='msg_type$idx' value='2'>
-                <img src='$imgpath'>&nbsp;".
-                $this->getLang('rem_msg')."&nbsp;
-                </span>";*/
        
         print "<br><br>";
 
@@ -231,22 +210,29 @@ class admin_plugin_nsmsg extends DokuWiki_Admin_Plugin {
     //selection -1=error, 0=info, 1=confirmation, 2=notification
     function _printmsgbar($sel, $idx){
         
-        $imgs = array("error.png", "info.png", "success.png", "notify.png");
-        $colors = array("#ffcccc", "#ccccff", "#ccffcc", "#ffffcc" );
+        //$imgs = array("error.png", "info.png", "success.png", "notify.png");
+        //$colors = array("#ffcccc", "#ccccff", "#ccffcc", "#ffffcc" );
         $msgs = array ("error_msg", "info_msg", "conf_msg", "note_msg");
         $values=array ("-1", "0", "1", "2");
+        $class= array ("error", "info", "success", "notify");
         
         for ($i=0; $i<4; $i++){
             $checked = (strcmp($sel, $values[$i])==0) ? 'checked' : '';
-
+          
+            echo "<div style='display:inline;' class='$class[$i]'>
+                <input type='radio' name='msg_type$idx' value=$values[$i] $checked>&nbsp;".
+                $this->getLang($msgs[$i])."&nbsp;
+                </div>";
+            /*
             $imgpath = join(DIRECTORY_SEPARATOR, array(DOKU_BASE, 'lib', 'images',$imgs[$i]));
             echo "<span style='background-color:$colors[$i];padding:0.2em;'>
                 <input type='radio' name='msg_type$idx' value=$values[$i] $checked>
                 <img src='$imgpath'>&nbsp;".
                 $this->getLang($msgs[$i])."&nbsp;
-                </span>";
+                </span>";*/
             
         }
+        
       
         
     }
